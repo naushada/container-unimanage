@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 ENV TZ=Asia/Calcutta
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
@@ -19,32 +19,33 @@ RUN apt-get -y install libzstd-dev
 RUN apt-get -y install git
 
 
-WORKDIR /root/mongo-c
-#RUN apt-get -y install mongodb-server-core
-RUN git clone -b r1.19 https://github.com/mongodb/mongo-c-driver.git
+# WORKDIR /root/mongo-c
+# #RUN apt-get -y install mongodb-server-core
+# RUN git clone -b r1.19 https://github.com/mongodb/mongo-c-driver.git
 
-RUN cd mongo-c-driver
-WORKDIR /root/mongo-c/mongo-c-driver/build
-RUN cmake ..
-RUN make && make install
+# RUN cd mongo-c-driver
+# WORKDIR /root/mongo-c/mongo-c-driver/build
+# RUN cmake ..
+# RUN make && make install
 
-WORKDIR /root/mongo-cxx
-RUN git clone -b releases/v3.6 https://github.com/mongodb/mongo-cxx-driver.git
-RUN cd mongo-cxx-driver
+# WORKDIR /root/mongo-cxx
+# RUN git clone -b releases/v3.6 https://github.com/mongodb/mongo-cxx-driver.git
+# RUN cd mongo-cxx-driver
 
-WORKDIR /root/mongo-cxx/mongo-cxx-driver/build
-RUN cmake .. -DBSONCXX_POLY_USE_MNMLSTC=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
-RUN make && make install
-RUN ldconfig
+# WORKDIR /root/mongo-cxx/mongo-cxx-driver/build
+# RUN cmake .. -DBSONCXX_POLY_USE_MNMLSTC=1 -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
+# RUN make && make install
+# RUN ldconfig
 
-WORKDIR /root
-RUN git clone https://github.com/google/googletest/
-WORKDIR /root/googletest
-RUN mkdir build && cd build && cmake .. && make install
-RUN ldconfig
-WORKDIR /root
+# WORKDIR /root
+# RUN git clone https://github.com/google/googletest/
+# WORKDIR /root/googletest
+# RUN mkdir build && cd build && cmake .. && make install
+# RUN ldconfig
+# WORKDIR /root
 
-RUN git clone -b feature/x86 https://github.com/naushada/uniimage.git
+# RUN git clone -b feature/x86 https://github.com/naushada/uniimage.git
+RUN git clone https://github.com/naushada/uniimage.git
 RUN cd uniimage
 RUN mkdir build
 WORKDIR /root/uniimage/build
@@ -63,9 +64,9 @@ RUN npm install -g @angular/cli
 #RUN ng update @angular/cli
 #RUN ng update @angular/core
 
-RUN npm install @clr/core @clr/icons @clr/angular @clr/ui @webcomponents/webcomponentsjs --save --force
-RUN npm install --save-dev clarity-ui --force
-RUN npm install --save-dev clarity-icons --force 
+RUN npm install @clr/core @clr/icons @clr/angular @clr/ui @webcomponents/webcomponentsjs --save
+#RUN npm install --save-dev clarity-ui --force
+#RUN npm install --save-dev clarity-icons --force 
 WORKDIR /root
 RUN mkdir webclient && cd webclient
 
@@ -75,7 +76,7 @@ RUN cd webui
 WORKDIR /root/webclient/webui/src
 
 RUN npm install
-RUN npm update
+#RUN npm update
 
 ##### Compile the Angular webgui #################
 
