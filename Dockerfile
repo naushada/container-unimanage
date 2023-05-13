@@ -42,7 +42,7 @@ RUN apt-get -y install git
 # WORKDIR /root/googletest
 # RUN mkdir build && cd build && cmake .. && make install
 # RUN ldconfig
-# WORKDIR /root
+WORKDIR /root
 
 # RUN git clone -b feature/x86 https://github.com/naushada/uniimage.git
 RUN git clone https://github.com/naushada/uniimage.git
