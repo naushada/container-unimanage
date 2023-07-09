@@ -11,12 +11,12 @@ RUN apt-get install -y --no-install-recommends \
     wget \
     zlib1g-dev
 
-RUN apt-get update
-RUN apt-get -y upgrade
-RUN apt-get -y install libboost-all-dev
-RUN apt-get -y install libbson-dev
-RUN apt-get -y install libzstd-dev
-RUN apt-get -y install git
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install libboost-all-dev && \
+    apt-get -y install libbson-dev && \
+    apt-get -y install libzstd-dev && \
+    apt-get -y install git
 
 
 # WORKDIR /root/mongo-c
@@ -45,15 +45,15 @@ RUN apt-get -y install git
 WORKDIR /root
 
 # RUN git clone -b feature/x86 https://github.com/naushada/uniimage.git
-RUN git clone https://github.com/naushada/uniimage.git
-RUN cd uniimage
-RUN mkdir build
-WORKDIR /root/uniimage/build
+RUN git clone -b uniimage https://github.com/naushada/hyd.git uniimage
+RUN cd uniimage/uniimage && \
+    mkdir build
+WORKDIR /root/uniimage/uniimage/build
 RUN cmake .. && make
 
 #node installation
-RUN apt-get -y update
-RUN apt-get -y upgrade
+RUN apt-get -y update && \
+    apt-get -y upgrade
 
 ########## installing dependencies node_module ######################
 RUN apt-get -y install curl
@@ -61,16 +61,14 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get -y install nodejs
 
 RUN npm install -g @angular/cli
-#RUN ng update @angular/cli
-#RUN ng update @angular/core
 
 RUN npm install @clr/core @clr/icons @clr/angular @clr/ui @webcomponents/webcomponentsjs --save
-#RUN npm install --save-dev clarity-ui --force
-#RUN npm install --save-dev clarity-icons --force 
 WORKDIR /root
 RUN mkdir webclient && cd webclient
 
 WORKDIR /root/webclient
+#ARG GITHUB_TOKEN
+#RUN git  clone https://${GITHUB_TOKEN}@github.com/naushada/unimanage.git webui
 RUN git  clone https://github.com/naushada/unimanage.git webui
 RUN cd webui
 WORKDIR /root/webclient/webui/src
@@ -84,21 +82,21 @@ WORKDIR /root/webclient/webui
 
 RUN ng build --configuration production --aot --base-href /webui/
 
-RUN cd /opt
-RUN mkdir xAPP
-RUN cd xAPP
-RUN mkdir webgui
-RUN cd webgui
+RUN cd /opt && \
+    mkdir xAPP && \
+    cd xAPP && \
+    mkdir webgui && \
+    cd webgui
 WORKDIR /opt/xAPP/webgui
 RUN cp -r /root/webclient/webui/dist/swi .
 
 WORKDIR /opt/xAPP
-RUN mkdir uniimage
-RUN cd uniimage
+RUN mkdir uniimage && \
+    cd uniimage
 WORKDIR /opt/xAPP/uniimage
 
 # copy from previoud build stage
-RUN cp /root/uniimage/build/uniimage .
+RUN cp /root/uniimage/uniimage/build/uniimage .
 
 # CMD_ARGS --role server --server-ip <ip-address> --server-port <server-port> --web-port <web-port> --protocol tcp
 ENV ARGS="--role server --server-port 58989  --protocol tcp"
