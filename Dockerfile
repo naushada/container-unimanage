@@ -20,8 +20,8 @@ RUN apt-get update && \
 
 RUN git clone -b openssl-3.1.1 https://github.com/naushada/openssl.git
 RUN cd openssl && \
-    gunzip && \
-    tar -xvf openssl-3.1.1 && \
+    gunzip openssl-3.1.1.tar.gz && \
+    tar -xvf openssl-3.1.1.tar && \
     cd openssl-3.1.1 && \
     ./config --prefix=/usr/local/openssl-3.1.1 && \
     make && make install
