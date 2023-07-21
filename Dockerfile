@@ -18,6 +18,14 @@ RUN apt-get update && \
     apt-get -y install libzstd-dev && \
     apt-get -y install git
 
+RUN git clone -b openssl-3.1.1 https://github.com/naushada/openssl.git
+RUN cd openssl && \
+    gunzip && \
+    tar -xvf openssl-3.1.1 && \
+    cd openssl-3.1.1 && \
+    ./config --prefix=/usr/local/openssl-3.1.1 && \
+    make && make install
+
 
 # WORKDIR /root/mongo-c
 # #RUN apt-get -y install mongodb-server-core
@@ -56,13 +64,12 @@ RUN apt-get -y update && \
     apt-get -y upgrade
 
 ########## installing dependencies node_module ######################
-RUN apt-get -y install curl
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get -y install nodejs
+RUN apt-get -y install curl && \
+    curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get -y install nodejs && \
+    npm install -g @angular/cli && \
+    npm install @clr/core @clr/icons @clr/angular @clr/ui @webcomponents/webcomponentsjs --save
 
-RUN npm install -g @angular/cli
-
-RUN npm install @clr/core @clr/icons @clr/angular @clr/ui @webcomponents/webcomponentsjs --save
 WORKDIR /root
 RUN mkdir webclient && cd webclient
 
